@@ -1,17 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { Input, Button, Card, CardBody } from "@heroui/react";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
+
+const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export function SignupForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+  const { setUser } = useAuth();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!username || !email || !password) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(`${SERVER_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Registration failed.");
+        return;
+      }
+
+      toast.success("Account registered successfully!");
+      setUser({
+        id: data.user.id,
+        name: data.user.username,
+        email: data.user.email,
+        role: data.user.role,
+      });
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card className="w-full max-w-md border-none shadow-2xl bg-background/60 backdrop-blur-md py-6 px-4">
@@ -25,7 +77,7 @@ export function SignupForm() {
           </p>
         </div>
 
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             isRequired
             type="text"
@@ -98,6 +150,7 @@ export function SignupForm() {
             color="primary"
             variant="solid"
             radius="sm"
+            isLoading={isLoading}
             className="w-full font-bold text-md shadow-lg shadow-primary/20 hover:scale-[1.01] transition-transform duration-200"
           >
             Sign Up
