@@ -3,12 +3,25 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ShoppingCart, Star, Search, Filter } from "lucide-react";
+import { ArrowRight, Star, Search, Filter } from "lucide-react";
 import { Button, Card, CardBody, Input, Spinner } from "@heroui/react";
 import { TProduct } from "@/types/product";
 
 const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
+
+const getValidImageUrl = (src: string) => {
+  if (!src)
+    return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  if (
+    src.startsWith("http://") ||
+    src.startsWith("https://") ||
+    src.startsWith("/")
+  ) {
+    return src;
+  }
+  return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+};
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<TProduct[]>([]);
@@ -172,7 +185,7 @@ export default function ProductsPage() {
                   <CardBody className="p-0 relative">
                     <div className="relative aspect-square w-full overflow-hidden">
                       <Image
-                        src={product.image}
+                        src={getValidImageUrl(product.image)}
                         alt={product.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"

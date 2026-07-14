@@ -105,17 +105,34 @@ export default function Header() {
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
+                <DropdownItem
+                  key="profile"
+                  className="h-14 gap-2"
+                  textValue="Signed in profile"
+                >
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold text-primary">{user.email}</p>
                 </DropdownItem>
-                <DropdownItem key="create_product" href="/products/create">
+                <DropdownItem
+                  key="create_product"
+                  href="/products/create"
+                  textValue="Create Product"
+                >
                   Create Product
                 </DropdownItem>
-                <DropdownItem key="manage_products" href="/products/manage">
+                <DropdownItem
+                  key="manage_products"
+                  href="/products/manage"
+                  textValue="Manage Products"
+                >
                   Manage Products
                 </DropdownItem>
-                <DropdownItem key="logout" color="danger" onClick={logout}>
+                <DropdownItem
+                  key="logout"
+                  color="danger"
+                  onClick={logout}
+                  textValue="Log out"
+                >
                   Log Out
                 </DropdownItem>
               </DropdownMenu>

@@ -10,6 +10,19 @@ import { TProduct } from "@/types/product";
 const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
+const getValidImageUrl = (src: string) => {
+  if (!src)
+    return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  if (
+    src.startsWith("http://") ||
+    src.startsWith("https://") ||
+    src.startsWith("/")
+  ) {
+    return src;
+  }
+  return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+};
+
 export default function ProductDetails() {
   const { id } = useParams();
   const router = useRouter();
@@ -83,7 +96,7 @@ export default function ProductDetails() {
       <div className="grid gap-12 lg:grid-cols-2 items-start">
         <div className="relative aspect-square overflow-hidden rounded-2xl border bg-default-50 shadow-md">
           <Image
-            src={product.image}
+            src={getValidImageUrl(product.image)}
             alt={product.title}
             fill
             priority

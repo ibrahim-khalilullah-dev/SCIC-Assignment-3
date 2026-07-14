@@ -66,7 +66,7 @@ export function SubscribeSection() {
               </Button>
             </form>
           </CardBody>
-        </Card>
+        </Card> 
       </div>
     </section>
   );

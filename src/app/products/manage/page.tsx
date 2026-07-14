@@ -31,6 +31,19 @@ import { TProduct } from "@/types/product";
 const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
+const getValidImageUrl = (src: string) => {
+  if (!src)
+    return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  if (
+    src.startsWith("http://") ||
+    src.startsWith("https://") ||
+    src.startsWith("/")
+  ) {
+    return src;
+  }
+  return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+};
+
 export default function ManageProductsPage() {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -207,7 +220,7 @@ export default function ManageProductsPage() {
                   <div className="flex items-center gap-4 w-full md:w-auto">
                     <div className="relative size-16 overflow-hidden rounded-lg bg-default-100 flex-shrink-0 border">
                       <Image
-                        src={product.image}
+                        src={getValidImageUrl(product.image)}
                         alt={product.title}
                         fill
                         className="object-cover"
