@@ -10,6 +10,11 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Avatar,
 } from "@heroui/react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
@@ -71,10 +76,10 @@ export default function Header() {
       <NavbarContent justify="end">
         {!user ? (
           <>
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem className="hidden sm:flex">
               <Link
                 href="/login"
-                className="text-foreground hover:text-primary transition-colors"
+                className="text-foreground hover:text-primary transition-colors mr-2"
               >
                 Login
               </Link>
@@ -87,9 +92,34 @@ export default function Header() {
           </>
         ) : (
           <NavbarItem>
-            <Button color="danger" variant="light" onClick={logout}>
-              Logout
-            </Button>
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Avatar
+                  isBordered
+                  as="button"
+                  className="transition-transform"
+                  color="primary"
+                  name={user.name}
+                  size="sm"
+                  src=""
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-semibold">Signed in as</p>
+                  <p className="font-semibold text-primary">{user.email}</p>
+                </DropdownItem>
+                <DropdownItem key="create_product" href="/products/create">
+                  Create Product
+                </DropdownItem>
+                <DropdownItem key="manage_products" href="/products/manage">
+                  Manage Products
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger" onClick={logout}>
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </NavbarItem>
         )}
       </NavbarContent>
