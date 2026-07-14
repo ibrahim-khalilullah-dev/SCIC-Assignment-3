@@ -66,6 +66,13 @@ export function LoginForm() {
   };
 
   const handleGoogleLogin = async () => {
+    if (!auth || !googleProvider) {
+      toast.error(
+        "Google Login is not configured. Please add your Firebase credentials to the .env file.",
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
