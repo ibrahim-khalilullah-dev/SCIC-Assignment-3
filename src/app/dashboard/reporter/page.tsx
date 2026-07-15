@@ -35,10 +35,10 @@ export default function ReporterDashboard() {
       async function fetchReporterData() {
         try {
           const [pRes, sRes] = await Promise.all([
-            fetch(`${SERVER_URL}/api/reporter/products`, {
+            fetch(SERVER_URL + "/api/reporter/products", {
               credentials: "include",
             }),
-            fetch(`${SERVER_URL}/api/reporter/sales`, {
+            fetch(SERVER_URL + "/api/reporter/sales", {
               credentials: "include",
             }),
           ]);
@@ -66,7 +66,7 @@ export default function ReporterDashboard() {
   const handleVerifyNow = async () => {
     setIsVerifying(true);
     try {
-      const res = await fetch(`${SERVER_URL}/api/create-checkout-session`, {
+      const res = await fetch(SERVER_URL + "/api/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function ReporterDashboard() {
       <div className="max-w-2xl mx-auto my-12 space-y-6">
         <Card className="bg-default-50 border-none rounded-3xl p-8 shadow-md">
           <CardBody className="p-0 text-center space-y-6">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto border border-primary/20">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto border-none">
               <Sparkles size={24} className="text-primary animate-pulse" />
             </div>
             <div className="space-y-2">
@@ -118,7 +118,7 @@ export default function ReporterDashboard() {
               </p>
             </div>
 
-            <div className="bg-default-100 border p-5 rounded-2xl max-w-sm mx-auto flex items-center justify-between text-left text-xs font-semibold">
+            <div className="bg-default-100 p-5 rounded-2xl max-w-sm mx-auto flex items-center justify-between text-left text-xs font-semibold border-none">
               <div>
                 <span className="text-muted-foreground block uppercase font-bold text-[9px] tracking-wider">
                   Verification Fee
@@ -130,7 +130,7 @@ export default function ReporterDashboard() {
                   </span>
                 </span>
               </div>
-              <span className="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              <span className="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border-none">
                 Lifetime Access
               </span>
             </div>
@@ -138,7 +138,7 @@ export default function ReporterDashboard() {
             <Button
               onClick={handleVerifyNow}
               isLoading={isVerifying}
-              className="w-full max-w-sm h-12 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs transition duration-200 shadow-lg shadow-primary/20"
+              className="w-full max-w-sm h-12 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs transition duration-200 shadow-lg shadow-primary/20 border-none"
             >
               Verify Seller Account Now
             </Button>
@@ -169,7 +169,7 @@ export default function ReporterDashboard() {
           <Button
             color="primary"
             radius="sm"
-            className="h-11 font-bold shadow-lg shadow-primary/20"
+            className="h-11 font-bold shadow-lg shadow-primary/20 border-none"
             startContent={<PlusCircle className="w-4 h-4" />}
           >
             Publish New Product
@@ -221,7 +221,7 @@ export default function ReporterDashboard() {
         </Card>
       </div>
 
-      <div className="rounded-2xl border p-8 bg-default-50 space-y-4 shadow-sm text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="rounded-2xl p-8 bg-default-50/50 space-y-4 shadow-sm text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-none">
         <div className="space-y-1">
           <h3 className="font-bold text-lg text-foreground">
             Explore Vendor Portals
@@ -237,7 +237,7 @@ export default function ReporterDashboard() {
             href="/dashboard/reporter/products"
             variant="flat"
             radius="sm"
-            className="font-bold"
+            className="font-bold border-none"
           >
             Manage Listings
           </Button>
@@ -246,7 +246,7 @@ export default function ReporterDashboard() {
             href="/dashboard/reporter/sales"
             color="primary"
             radius="sm"
-            className="font-bold"
+            className="font-bold border-none"
             endContent={<ArrowUpRight className="w-4 h-4" />}
           >
             Sales Ledger

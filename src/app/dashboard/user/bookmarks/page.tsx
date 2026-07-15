@@ -25,7 +25,7 @@ export default function UserBookmarksPage() {
 
   const fetchBookmarks = async () => {
     try {
-      const res = await fetch(`${SERVER_URL}/api/bookmarks`, {
+      const res = await fetch(SERVER_URL + "/api/bookmarks", {
         credentials: "include",
       });
       if (res.ok) {
@@ -45,7 +45,7 @@ export default function UserBookmarksPage() {
 
   const handleRemove = async (productId: string) => {
     try {
-      const res = await fetch(`${SERVER_URL}/api/bookmarks/${productId}`, {
+      const res = await fetch(SERVER_URL + "/api/bookmarks/" + productId, {
         method: "DELETE",
         credentials: "include",
       });
@@ -64,7 +64,7 @@ export default function UserBookmarksPage() {
   const handleBuyNow = async (productId: string) => {
     setLoadingId(productId);
     try {
-      const res = await fetch(`${SERVER_URL}/api/create-checkout-session`, {
+      const res = await fetch(SERVER_URL + "/api/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export default function UserBookmarksPage() {
               className="bg-default-50 border-none p-5 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-transform duration-200 shadow-sm"
             >
               <div className="space-y-4">
-                <div className="aspect-square rounded-xl overflow-hidden relative border bg-default-100 flex items-center justify-center">
+                <div className="aspect-square rounded-xl overflow-hidden relative bg-default-100 flex items-center justify-center">
                   {b.productImage ? (
                     <img
                       src={b.productImage}
@@ -142,7 +142,7 @@ export default function UserBookmarksPage() {
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t flex flex-col gap-3">
+              <div className="mt-6 pt-4 flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground uppercase font-bold">
                     Price
@@ -179,7 +179,7 @@ export default function UserBookmarksPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-default-50 border border-dashed rounded-2xl">
+        <div className="text-center py-16 bg-default-50 border-none rounded-2xl shadow-sm">
           <p className="text-muted-foreground text-sm font-medium">
             Your wishlist shelf is currently empty.
           </p>

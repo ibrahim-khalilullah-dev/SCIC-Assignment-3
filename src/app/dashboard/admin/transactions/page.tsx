@@ -24,7 +24,7 @@ export default function AdminTransactionsPage() {
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const res = await fetch(`${SERVER_URL}/api/admin/transactions`, {
+        const res = await fetch(SERVER_URL + "/api/admin/transactions", {
           credentials: "include",
         });
         if (res.ok) {
@@ -86,11 +86,11 @@ export default function AdminTransactionsPage() {
       </div>
 
       {transactions.length > 0 ? (
-        <div className="bg-default-50 border rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-default-50/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm border-none">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs text-muted-foreground font-semibold">
               <thead>
-                <tr className="border-b text-default-500 font-bold bg-default-100">
+                <tr className="text-default-500 font-bold bg-default-100">
                   <th className="py-5 px-6">Transaction ID</th>
                   <th className="py-5 px-6">Ecosystem Type</th>
                   <th className="py-5 px-6">Buyer Email</th>
@@ -145,7 +145,7 @@ export default function AdminTransactionsPage() {
           </div>
         </div>
       ) : (
-        <div className="text-center py-16 bg-default-50 border border-dashed rounded-2xl">
+        <div className="text-center py-16 bg-default-50 border-none rounded-2xl shadow-sm">
           <p className="text-muted-foreground text-sm font-medium">
             No transaction records found in the platform database.
           </p>

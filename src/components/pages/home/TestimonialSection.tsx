@@ -6,30 +6,30 @@ import { Star } from "lucide-react";
 export function TestimonialSection() {
   const testimonials = [
     {
-      name: "Sarah Jenkins",
-      role: "Verified Buyer",
-      text: "NextMart has completely changed how I shop. The checkout was seamless, and the items arrived in premium packaging sooner than expected!",
+      name: "Marcus Miller",
+      role: "Lead Systems Architect",
+      text: "NextMart has completely streamlined my procurement process. The Stripe payment gateway worked seamlessly, and the premium hardware items arrived in pristine condition ahead of schedule.",
       rating: 5,
       avatar: "",
     },
     {
-      name: "Marcus Chen",
-      role: "Tech enthusiast",
-      text: "The selection of electronics is fantastic. Customer service helped me verify the specifications within minutes of submitting a request. Highly recommended!",
+      name: "Sarah Lindqvist",
+      role: "E-Commerce Consultant",
+      text: "The selection of electronics and minimal workspace accessories is highly curated and premium. I purchased a mechanical keyboard and received excellent developer support for my order queries.",
       rating: 5,
       avatar: "",
     },
     {
-      name: "Elena Rostova",
-      role: "Fashion Designer",
-      text: "As a designer, I appreciate quality. The products I ordered are authentic and exactly as described in the catalog. Excellent responsive support.",
+      name: "Daniel Kovac",
+      role: "UI/UX Designer",
+      text: "As a designer, I am extremely particular about build quality. The catalog descriptions match the physical products perfectly, and the responsive user dashboard made tracking my order effortless.",
       rating: 5,
       avatar: "",
     },
   ];
 
   return (
-    <section className="py-24 bg-background border-b">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center space-y-3 mb-12">
           <span className="text-xs font-bold tracking-widest text-primary uppercase bg-primary/10 px-3 py-1 rounded-full">

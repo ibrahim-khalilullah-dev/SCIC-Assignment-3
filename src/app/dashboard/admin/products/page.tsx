@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardBody, Button, Spinner } from "@heroui/react";
-import { Trash2, Eye, EyeOff, ShoppingBag } from "lucide-react";
+import { Trash2, Eye, EyeOff, X, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 import { TProduct } from "@/types/product";
 
@@ -14,9 +14,13 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [pendingDeleteName, setPendingDeleteName] = useState("");
+
   const fetchAdminProducts = async () => {
     try {
-      const res = await fetch(`${SERVER_URL}/api/admin/products`, {
+      const res = await fetch(SERVER_URL + "/api/admin/products", {
         credentials: "include",
       });
       if (res.ok) {
@@ -40,7 +44,7 @@ export default function AdminProductsPage() {
       currentStatus === "Available" ? "Unpublished" : "Available";
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/products/${id}`, {
+      const res = await fetch(SERVER_URL + "/api/products/" + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +60,9 @@ export default function AdminProductsPage() {
             return pId === id ? { ...p, status: newStatus as any } : p;
           }),
         );
-        toast.success(`Product is now ${newStatus.toLowerCase()}.`);
+        toast.success(
+          "Product status updated to " + newStatus.toLowerCase() + ".",
+        );
       } else {
         toast.error("Failed to update product status.");
       }
@@ -67,12 +73,17 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to permanently delete this product?"))
-      return;
-    setUpdatingId(id);
+  const initiateDelete = (productId: string, productName: string) => {
+    setPendingDeleteId(productId);
+    setPendingDeleteName(productName);
+    setDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    setUpdatingId(pendingDeleteId);
     try {
-      const res = await fetch(`${SERVER_URL}/api/products/${id}`, {
+      const res = await fetch(SERVER_URL + "/api/products/" + pendingDeleteId, {
         method: "DELETE",
         credentials: "include",
       });
@@ -81,7 +92,7 @@ export default function AdminProductsPage() {
         setProducts(
           products.filter((p) => {
             const pId = p.id || (p as any)._id;
-            return pId !== id;
+            return pId !== pendingDeleteId;
           }),
         );
         toast.success("Product deleted successfully.");
@@ -92,6 +103,8 @@ export default function AdminProductsPage() {
       toast.error("Error communicating with server.");
     } finally {
       setUpdatingId(null);
+      setDeleteConfirmOpen(false);
+      setPendingDeleteId(null);
     }
   };
 
@@ -125,11 +138,11 @@ export default function AdminProductsPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-default-50 border rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-default-50/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs text-muted-foreground font-semibold">
               <thead>
-                <tr className="border-b text-default-500 font-bold bg-default-100">
+                <tr className="text-default-500 font-bold bg-default-100">
                   <th className="py-5 px-6">Product Details</th>
                   <th className="py-5 px-6">Author / Seller</th>
                   <th className="py-5 px-6">Category</th>
@@ -207,8 +220,8 @@ export default function AdminProductsPage() {
                           )}
                           <button
                             disabled={updatingId === pId}
-                            onClick={() => handleDelete(pId)}
-                            className="text-danger hover:text-danger/80 transition pl-3 border-l cursor-pointer"
+                            onClick={() => initiateDelete(pId, p.title)}
+                            className="text-danger hover:text-danger/80 transition pl-3 border-l border-default-100 cursor-pointer"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -220,6 +233,51 @@ export default function AdminProductsPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {deleteConfirmOpen && pendingDeleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <Card className="w-full max-w-sm bg-default-50 border-none p-6 shadow-2xl space-y-6 rounded-2xl">
+            <CardBody className="p-0 space-y-2 text-center flex flex-col items-center">
+              <div className="p-3 bg-danger/10 text-danger rounded-full border border-danger/20 w-fit mb-2">
+                <AlertTriangle className="w-6 h-6 animate-bounce" />
+              </div>
+              <h3 className="text-base font-bold text-foreground">
+                Remove Product Listing
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Are you sure you want to permanently delete the product{" "}
+                <span className="text-foreground font-bold">
+                  {pendingDeleteName}
+                </span>{" "}
+                from the marketplace directory? This action is irreversible.
+              </p>
+            </CardBody>
+            <div className="flex items-center justify-end gap-3 text-xs font-semibold">
+              <Button
+                variant="flat"
+                radius="sm"
+                size="sm"
+                onClick={() => {
+                  setDeleteConfirmOpen(false);
+                  setPendingDeleteId(null);
+                }}
+                className="font-bold"
+              >
+                <X className="w-4 h-4 mr-1" /> Cancel
+              </Button>
+              <Button
+                color="danger"
+                radius="sm"
+                size="sm"
+                onClick={confirmDelete}
+                className="font-bold shadow-lg shadow-danger/20"
+              >
+                <Trash2 className="w-4 h-4 mr-1" /> Permanently Delete
+              </Button>
+            </div>
+          </Card>
         </div>
       )}
     </div>

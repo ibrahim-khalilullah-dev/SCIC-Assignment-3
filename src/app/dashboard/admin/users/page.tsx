@@ -10,6 +10,7 @@ import {
   Check,
   X,
   Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { TUser } from "@/types/user";
@@ -29,9 +30,13 @@ export default function AdminUsersPage() {
     newRole: string;
   } | null>(null);
 
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [pendingDeleteName, setPendingDeleteName] = useState("");
+
   const fetchUsers = async () => {
     try {
-      const res = await fetch(`${SERVER_URL}/api/admin/users`, {
+      const res = await fetch(SERVER_URL + "/api/admin/users", {
         credentials: "include",
       });
       if (res.ok) {
@@ -63,7 +68,7 @@ export default function AdminUsersPage() {
     setUpdatingId(pendingChange.userId);
     try {
       const res = await fetch(
-        `${SERVER_URL}/api/admin/users/${pendingChange.userId}/role`,
+        SERVER_URL + "/api/admin/users/" + pendingChange.userId + "/role",
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -81,7 +86,7 @@ export default function AdminUsersPage() {
               : u;
           }),
         );
-        toast.success(`User role updated to ${pendingChange.newRole}`);
+        toast.success("User role updated to " + pendingChange.newRole);
       } else {
         toast.error("Failed to update user role.");
       }
@@ -99,7 +104,7 @@ export default function AdminUsersPage() {
     const action = currentStatus === "banned" ? "unban" : "ban";
     try {
       const res = await fetch(
-        `${SERVER_URL}/api/admin/users/${userId}/${action}`,
+        SERVER_URL + "/api/admin/users/" + userId + "/" + action,
         {
           method: "PATCH",
           credentials: "include",
@@ -114,9 +119,9 @@ export default function AdminUsersPage() {
             return uId === userId ? { ...u, status: nextStatus } : u;
           }),
         );
-        toast.success(`User successfully ${action}ned.`);
+        toast.success("User successfully " + action + "ned.");
       } else {
-        toast.error(`Failed to ${action} user.`);
+        toast.error("Failed to " + action + " user.");
       }
     } catch {
       toast.error("Error communicating with server.");
@@ -125,21 +130,29 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleDelete = async (userId: string) => {
-    if (!confirm("Are you sure you want to permanently remove this user?"))
-      return;
-    setUpdatingId(userId);
+  const initiateDelete = (userId: string, userName: string) => {
+    setPendingDeleteId(userId);
+    setPendingDeleteName(userName);
+    setDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    setUpdatingId(pendingDeleteId);
     try {
-      const res = await fetch(`${SERVER_URL}/api/admin/users/${userId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        SERVER_URL + "/api/admin/users/" + pendingDeleteId,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
       if (res.ok) {
         setUsers(
           users.filter((u) => {
             const uId = u.id || (u as any)._id;
-            return uId !== userId;
+            return uId !== pendingDeleteId;
           }),
         );
         toast.success("User removed successfully.");
@@ -150,6 +163,8 @@ export default function AdminUsersPage() {
       toast.error("Error communicating with server.");
     } finally {
       setUpdatingId(null);
+      setDeleteConfirmOpen(false);
+      setPendingDeleteId(null);
     }
   };
 
@@ -176,11 +191,11 @@ export default function AdminUsersPage() {
         </p>
       </div>
 
-      <div className="bg-default-50 border rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-default-50/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-xs text-muted-foreground font-semibold">
             <thead>
-              <tr className="border-b text-default-500 font-bold bg-default-100">
+              <tr className="text-default-500 font-bold bg-default-100">
                 <th className="py-5 px-6">User Name</th>
                 <th className="py-5 px-6">Email Address</th>
                 <th className="py-5 px-6">System Role</th>
@@ -255,9 +270,10 @@ export default function AdminUsersPage() {
                         {u.role !== "user" && (
                           <button
                             disabled={updatingId === uId}
-                            onClick={() =>
-                              initiateRoleChange(uId, u.name, "user")
-                            }
+                            onClick={() => {
+                              const uName = u.name || "Customer";
+                              initiateRoleChange(uId, uName, "user");
+                            }}
                             className="text-default-500 hover:text-primary transition cursor-pointer"
                           >
                             Make Customer
@@ -268,14 +284,17 @@ export default function AdminUsersPage() {
                           onClick={() =>
                             handleBanToggle(uId, u.status || "active")
                           }
-                          className="text-default-500 hover:text-danger transition pl-3 border-l cursor-pointer"
+                          className="text-default-500 hover:text-danger transition pl-3 cursor-pointer border-l border-default-100"
                         >
                           {isBanned ? "Unban" : "Ban"}
                         </button>
                         <button
                           disabled={updatingId === uId}
-                          onClick={() => handleDelete(uId)}
-                          className="text-danger hover:text-danger/80 transition pl-3 border-l cursor-pointer"
+                          onClick={() => {
+                            const uName = u.name || "User";
+                            initiateDelete(uId, uName);
+                          }}
+                          className="text-danger hover:text-danger/80 transition pl-3 cursor-pointer border-l border-default-100"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -329,6 +348,51 @@ export default function AdminUsersPage() {
                 className="font-bold shadow-lg shadow-primary/20"
               >
                 <Check className="w-4 h-4 mr-1" /> Confirm
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {deleteConfirmOpen && pendingDeleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <Card className="w-full max-w-sm bg-default-50 border-none p-6 shadow-2xl space-y-6 rounded-2xl">
+            <CardBody className="p-0 space-y-2 text-center flex flex-col items-center">
+              <div className="p-3 bg-danger/10 text-danger rounded-full border border-danger/20 w-fit mb-2">
+                <AlertTriangle className="w-6 h-6 animate-bounce" />
+              </div>
+              <h3 className="text-base font-bold text-foreground">
+                Remove User Account
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Are you sure you want to permanently delete{" "}
+                <span className="text-foreground font-bold">
+                  {pendingDeleteName}
+                </span>{" "}
+                from the database? This action is irreversible.
+              </p>
+            </CardBody>
+            <div className="flex items-center justify-end gap-3 text-xs font-semibold">
+              <Button
+                variant="flat"
+                radius="sm"
+                size="sm"
+                onClick={() => {
+                  setDeleteConfirmOpen(false);
+                  setPendingDeleteId(null);
+                }}
+                className="font-bold"
+              >
+                <X className="w-4 h-4 mr-1" /> Cancel
+              </Button>
+              <Button
+                color="danger"
+                radius="sm"
+                size="sm"
+                onClick={confirmDelete}
+                className="font-bold shadow-lg shadow-danger/20"
+              >
+                <Trash2 className="w-4 h-4 mr-1" /> Permanently Delete
               </Button>
             </div>
           </Card>

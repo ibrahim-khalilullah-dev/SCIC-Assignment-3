@@ -28,7 +28,7 @@ export function ServiceSection() {
   ];
 
   return (
-    <section className="py-20 bg-background border-b">
+    <section className="py-20 bg-background">
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((srv, idx) => (

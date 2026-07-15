@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { motion } from "framer-motion";
 
 const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
@@ -34,7 +35,7 @@ export function SignupForm() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/auth/signup`, {
+      const res = await fetch(SERVER_URL + "/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,6 +57,7 @@ export function SignupForm() {
         name: data.user.username,
         email: data.user.email,
         role: data.user.role,
+        verifiedReporter: false,
       });
       router.push("/");
     } catch (error) {
@@ -67,107 +69,116 @@ export function SignupForm() {
   };
 
   return (
-    <Card className="w-full max-w-md border-none shadow-2xl bg-background/60 backdrop-blur-md py-6 px-4">
-      <CardBody className="space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-            Create an Account
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Sign up below to start shopping at NextMart
-          </p>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="w-full max-w-md border-none bg-background/50 backdrop-blur-md py-6 px-4 rounded-3xl shadow-xl">
+        <CardBody className="space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+              Create an Account
+            </h1>
+            <p className="text-sm text-default-400">
+              Sign up below to start shopping at NextMart
+            </p>
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            isRequired
-            type="text"
-            label="Username"
-            placeholder="johndoe"
-            labelPlacement="outside"
-            value={username}
-            onValueChange={setUsername}
-            variant="bordered"
-            radius="sm"
-            classNames={{
-              inputWrapper: "border-default-200 focus-within:border-primary",
-            }}
-            startContent={
-              <User className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
-            }
-          />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              isRequired
+              type="text"
+              label="Username"
+              placeholder="johndoe"
+              labelPlacement="outside"
+              value={username}
+              onValueChange={setUsername}
+              variant="bordered"
+              radius="sm"
+              classNames={{
+                inputWrapper:
+                  "border-default-200 focus-within:border-primary h-11 bg-background",
+              }}
+              startContent={
+                <User className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
+              }
+            />
 
-          <Input
-            isRequired
-            type="email"
-            label="Email Address"
-            placeholder="you@example.com"
-            labelPlacement="outside"
-            value={email}
-            onValueChange={setEmail}
-            variant="bordered"
-            radius="sm"
-            classNames={{
-              inputWrapper: "border-default-200 focus-within:border-primary",
-            }}
-            startContent={
-              <Mail className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
-            }
-          />
+            <Input
+              isRequired
+              type="email"
+              label="Email Address"
+              placeholder="you@example.com"
+              labelPlacement="outside"
+              value={email}
+              onValueChange={setEmail}
+              variant="bordered"
+              radius="sm"
+              classNames={{
+                inputWrapper:
+                  "border-default-200 focus-within:border-primary h-11 bg-background",
+              }}
+              startContent={
+                <Mail className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
+              }
+            />
 
-          <Input
-            isRequired
-            type={isVisible ? "text" : "password"}
-            label="Password"
-            placeholder="••••••••"
-            labelPlacement="outside"
-            value={password}
-            onValueChange={setPassword}
-            variant="bordered"
-            radius="sm"
-            classNames={{
-              inputWrapper: "border-default-200 focus-within:border-primary",
-            }}
-            startContent={
-              <Lock className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
-            }
-            endContent={
-              <button
-                type="button"
-                onClick={toggleVisibility}
-                className="focus:outline-none"
-              >
-                {isVisible ? (
-                  <EyeOff className="size-4 text-default-400" />
-                ) : (
-                  <Eye className="size-4 text-default-400" />
-                )}
-              </button>
-            }
-          />
+            <Input
+              isRequired
+              type={isVisible ? "text" : "password"}
+              label="Password"
+              placeholder="••••••••"
+              labelPlacement="outside"
+              value={password}
+              onValueChange={setPassword}
+              variant="bordered"
+              radius="sm"
+              classNames={{
+                inputWrapper:
+                  "border-default-200 focus-within:border-primary h-11 bg-background",
+              }}
+              startContent={
+                <Lock className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
+              }
+              endContent={
+                <button
+                  type="button"
+                  onClick={toggleVisibility}
+                  className="focus:outline-none"
+                >
+                  {isVisible ? (
+                    <EyeOff className="size-4 text-default-400" />
+                  ) : (
+                    <Eye className="size-4 text-default-400" />
+                  )}
+                </button>
+              }
+            />
 
-          <Button
-            type="submit"
-            color="primary"
-            variant="solid"
-            radius="sm"
-            isLoading={isLoading}
-            className="w-full font-bold text-md shadow-lg shadow-primary/20 hover:scale-[1.01] transition-transform duration-200"
-          >
-            Sign Up
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              color="primary"
+              variant="solid"
+              radius="sm"
+              isLoading={isLoading}
+              className="w-full font-bold text-md shadow-lg shadow-primary/20 hover:scale-[1.01] transition-transform duration-200"
+            >
+              Sign Up
+            </Button>
+          </form>
 
-        <div className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-semibold text-primary hover:underline"
-          >
-            Log In
-          </Link>
-        </div>
-      </CardBody>
-    </Card>
+          <div className="text-center text-sm text-default-400">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-semibold text-primary hover:underline"
+            >
+              Log In
+            </Link>
+          </div>
+        </CardBody>
+      </Card>
+    </motion.div>
   );
 }

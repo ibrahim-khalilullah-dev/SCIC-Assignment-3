@@ -58,7 +58,7 @@ export function FeaturedProductsSection() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-24 bg-default-50 border-b">
+    <section className="py-24 bg-default-50">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-12">
           <div>
@@ -75,7 +75,7 @@ export function FeaturedProductsSection() {
             variant="flat"
             color="primary"
             radius="sm"
-            className="font-bold"
+            className="font-bold border-none"
             endContent={<ArrowRight className="size-4" />}
           >
             View All
@@ -83,61 +83,66 @@ export function FeaturedProductsSection() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <Card
-              key={product.id}
-              className="group overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 bg-background"
-            >
-              <CardBody className="p-0 relative">
-                <div className="relative aspect-square w-full overflow-hidden">
-                  <Image
-                    src={getValidImageUrl(product.image)}
-                    alt={product.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
+          {products.map((product) => {
+            const pId = product.id || (product as any)._id;
 
-                <div className="p-5 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-                      {product.category}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-semibold">
-                        {product.rating}
+            return (
+              <Card
+                key={pId}
+                className="group overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 bg-background"
+              >
+                <CardBody className="p-0 relative">
+                  <div className="relative aspect-square w-full overflow-hidden">
+                    <Image
+                      src={getValidImageUrl(product.image)}
+                      alt={product.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+
+                  <div className="p-5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                        {product.category}
                       </span>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-semibold">
+                          {product.rating}
+                        </span>
+                      </div>
+                    </div>
+
+                    <h3 className="line-clamp-1 text-lg font-bold text-foreground hover:text-primary transition-colors">
+                      <Link href={`/products/${pId}`}>{product.title}</Link>
+                    </h3>
+
+                    <p className="line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+                      {product.description}
+                    </p>
+
+                    <div className="flex items-center justify-between border-t border-default-100/50 pt-4">
+                      <span className="text-2xl font-black text-foreground">
+                        ${product.price}
+                      </span>
+                      <Button
+                        as={Link}
+                        href={`/products/${pId}`}
+                        size="sm"
+                        color="primary"
+                        radius="sm"
+                        className="font-bold border-none"
+                      >
+                        View Details
+                      </Button>
                     </div>
                   </div>
-
-                  <h3 className="line-clamp-1 text-lg font-bold text-foreground">
-                    {product.title}
-                  </h3>
-
-                  <p className="line-clamp-2 text-sm text-muted-foreground leading-relaxed">
-                    {product.description}
-                  </p>
-
-                  <div className="flex items-center justify-between border-t pt-4">
-                    <span className="text-2xl font-black text-foreground">
-                      ${product.price}
-                    </span>
-                    <Button
-                      as={Link}
-                      href={`/products/${product.id}`}
-                      size="sm"
-                      color="primary"
-                      radius="sm"
-                      className="font-bold"
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
+                </CardBody>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

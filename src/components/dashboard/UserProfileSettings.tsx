@@ -34,7 +34,7 @@ export default function UserProfileSettings() {
 
     try {
       const apiKey = process.env.NEXT_PUBLIC_IMAGE_UPLOAD_API;
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      const res = await fetch("https://api.imgbb.com/1/upload?key=" + apiKey, {
         method: "POST",
         body: formData,
       });
@@ -64,11 +64,12 @@ export default function UserProfileSettings() {
     setIsSaving(true);
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/users/profile`, {
+      const res = await fetch(SERVER_URL + "/api/users/profile", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ name, image: imageUrl }),
       });
 

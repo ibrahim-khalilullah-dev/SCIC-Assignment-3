@@ -173,8 +173,8 @@ export default function ProductDetails() {
     );
   }
 
-  const isSeller = user && user.id === product.sellerId;
-  const isAdmin = user && user.role === "admin";
+  const isSeller = !!(user && user.id === product.sellerId);
+  const isAdmin = !!(user && user.role === "admin");
   const isSoldOut = product.status === "Sold" || product.stock <= 0;
 
   return (
@@ -197,6 +197,7 @@ export default function ProductDetails() {
             alt={product.title}
             fill
             priority
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
           />
         </div>

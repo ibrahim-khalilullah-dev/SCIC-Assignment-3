@@ -6,16 +6,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full border-t bg-background mt-auto py-12">
+    <footer className="w-full bg-background mt-auto py-12">
       <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="flex flex-col gap-4">
           <Link
             href="/"
-            className="font-bold text-2xl tracking-wider text-primary"
+            className="font-black text-2xl tracking-wider bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:opacity-90 transition-opacity"
           >
             NextMart
           </Link>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-sm text-default-500 leading-relaxed">
             Your modern full-stack e-commerce experience. Discover carefully
             curated premium products.
           </p>
@@ -25,7 +25,7 @@ export default function Footer() {
           <h4 className="font-semibold text-foreground mb-4">
             Shop Categories
           </h4>
-          <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+          <ul className="flex flex-col gap-2 text-sm text-default-500">
             <li>
               <Link
                 href="/products"
@@ -63,7 +63,7 @@ export default function Footer() {
 
         <div>
           <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>
-          <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+          <ul className="flex flex-col gap-2 text-sm text-default-500">
             <li>
               <Link href="/" className="hover:text-primary transition-colors">
                 Home
@@ -90,14 +90,14 @@ export default function Footer() {
 
         <div>
           <h4 className="font-semibold text-foreground mb-4">Get in Touch</h4>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+          <p className="text-sm text-default-500 leading-relaxed mb-2">
             123 NextMart Boulevard, Dhaka, Bangladesh.
           </p>
-          <p className="text-sm text-muted-foreground">support@nextmart.com</p>
+          <p className="text-sm text-default-500">support@nextmart.com</p>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 border-t mt-12 pt-6 text-center text-sm text-muted-foreground">
+      <div className="container mx-auto px-6 md:px-12 mt-12 pt-6 text-center text-sm text-default-400">
         &copy; {currentYear} NextMart. All rights reserved.
       </div>
     </footer>

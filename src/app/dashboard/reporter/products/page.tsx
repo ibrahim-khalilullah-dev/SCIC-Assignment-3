@@ -26,7 +26,7 @@ export default function ReporterProductsPage() {
 
   const fetchReporterProducts = async () => {
     try {
-      const res = await fetch(`${SERVER_URL}/api/reporter/products`, {
+      const res = await fetch(SERVER_URL + "/api/reporter/products", {
         credentials: "include",
       });
       if (res.ok) {
@@ -50,7 +50,7 @@ export default function ReporterProductsPage() {
       currentStatus === "Available" ? "Unpublished" : "Available";
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/products/${id}`, {
+      const res = await fetch(SERVER_URL + "/api/products/" + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -61,11 +61,12 @@ export default function ReporterProductsPage() {
 
       if (res.ok) {
         setProducts(
-          products.map((p) =>
-            p.id === id ? { ...p, status: newStatus as any } : p,
-          ),
+          products.map((p) => {
+            const pId = p.id || (p as any)._id;
+            return pId === id ? { ...p, status: newStatus as any } : p;
+          }),
         );
-        toast.success(`Product is now ${newStatus.toLowerCase()}.`);
+        toast.success("Product is now " + newStatus.toLowerCase() + ".");
       } else {
         toast.error("Failed to update visibility.");
       }
@@ -82,13 +83,18 @@ export default function ReporterProductsPage() {
 
     setLoadingId(id);
     try {
-      const res = await fetch(`${SERVER_URL}/api/products/${id}`, {
+      const res = await fetch(SERVER_URL + "/api/products/" + id, {
         method: "DELETE",
         credentials: "include",
       });
 
       if (res.ok) {
-        setProducts(products.filter((p) => p.id !== id));
+        setProducts(
+          products.filter((p) => {
+            const pId = p.id || (p as any)._id;
+            return pId !== id;
+          }),
+        );
         toast.success("Product deleted successfully.");
       } else {
         toast.error("Failed to delete product.");
@@ -148,18 +154,18 @@ export default function ReporterProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <div className="text-center py-16 bg-default-50 border border-dashed rounded-2xl">
+        <div className="text-center py-16 bg-default-50 rounded-2xl shadow-sm">
           <p className="text-muted-foreground text-sm font-medium">
             No products found in your catalog. Click Publish New Product to
             begin.
           </p>
         </div>
       ) : (
-        <div className="bg-default-50 border rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-default-50 rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs text-muted-foreground">
               <thead>
-                <tr className="border-b text-default-500 font-bold bg-default-100">
+                <tr className="text-default-500 font-bold bg-default-100">
                   <th className="py-5 px-6">Product Details</th>
                   <th className="py-5 px-6">Category</th>
                   <th className="py-5 px-6">Price</th>
@@ -167,84 +173,88 @@ export default function ReporterProductsPage() {
                   <th className="py-5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-default-100">
-                {products.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="hover:bg-default-100 transition-colors"
-                  >
-                    <td className="py-4 px-6 font-bold text-foreground">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden relative bg-default-200 border shrink-0">
-                          {product.image && (
-                            <img
-                              src={product.image}
-                              className="absolute inset-0 w-full h-full object-cover"
-                              alt="Cover"
-                            />
-                          )}
-                        </div>
-                        <span className="truncate max-w-xs">
-                          {product.title}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6 font-semibold text-default-500">
-                      {product.category}
-                    </td>
-                    <td className="py-4 px-6 font-black text-primary text-sm">
-                      ${parseFloat(product.price.toString()).toFixed(2)}
-                    </td>
-                    <td className="py-4 px-6">
-                      <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                          product.status === "Available"
-                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                            : product.status === "Sold"
-                              ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                              : "bg-red-500/10 text-red-500 border-red-500/20"
-                        }`}
-                      >
-                        {product.status || "Available"}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-right font-medium">
-                      <div className="flex items-center justify-end gap-3">
-                        <Link
-                          href={`/dashboard/reporter/edit/${product.id}`}
-                          className="text-default-500 hover:text-primary transition font-bold"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </Link>
-                        {product.status !== "Sold" && (
-                          <button
-                            disabled={loadingId === product.id}
-                            onClick={() =>
-                              handleToggleStatus(
-                                product.id || "",
-                                product.status || "Available",
-                              )
-                            }
-                            className="text-default-500 hover:text-primary transition pl-3 border-l border-default-100 cursor-pointer"
-                          >
-                            {product.status === "Available" ? (
-                              <EyeOff className="w-4 h-4" />
-                            ) : (
-                              <Eye className="w-4 h-4" />
+              <tbody className="divide-y divide-default-100/50">
+                {products.map((product) => {
+                  const pId = product.id || (product as any)._id;
+
+                  return (
+                    <tr
+                      key={pId}
+                      className="hover:bg-default-100 transition-colors"
+                    >
+                      <td className="py-4 px-6 font-bold text-foreground">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg overflow-hidden relative bg-default-200 border-none shrink-0">
+                            {product.image && (
+                              <img
+                                src={product.image}
+                                className="absolute inset-0 w-full h-full object-cover"
+                                alt="Cover"
+                              />
                             )}
-                          </button>
-                        )}
-                        <button
-                          disabled={loadingId === product.id}
-                          onClick={() => handleDelete(product.id || "")}
-                          className="text-danger hover:text-danger/80 transition pl-3 border-l border-default-100 cursor-pointer"
+                          </div>
+                          <span className="truncate max-w-xs">
+                            {product.title}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 font-semibold text-default-500">
+                        {product.category}
+                      </td>
+                      <td className="py-4 px-6 font-black text-primary text-sm">
+                        ${parseFloat(product.price.toString()).toFixed(2)}
+                      </td>
+                      <td className="py-4 px-6">
+                        <span
+                          className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border-none uppercase tracking-wider ${
+                            product.status === "Available"
+                              ? "bg-emerald-500/10 text-emerald-500"
+                              : product.status === "Sold"
+                                ? "bg-blue-500/10 text-blue-500"
+                                : "bg-red-500/10 text-red-500"
+                          }`}
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          {product.status || "Available"}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-right font-medium">
+                        <div className="flex items-center justify-end gap-4">
+                          <Link
+                            href={"/dashboard/reporter/edit/" + pId}
+                            className="text-default-500 hover:text-primary transition font-bold"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </Link>
+                          {product.status !== "Sold" && (
+                            <button
+                              disabled={loadingId === pId}
+                              onClick={() =>
+                                handleToggleStatus(
+                                  pId,
+                                  product.status || "Available",
+                                )
+                              }
+                              className="text-default-500 hover:text-primary transition cursor-pointer"
+                            >
+                              {product.status === "Available" ? (
+                                <EyeOff className="w-4 h-4" />
+                              ) : (
+                                <Eye className="w-4 h-4" />
+                              )}
+                            </button>
+                          )}
+                          <button
+                            disabled={loadingId === pId}
+                            onClick={() => handleDelete(pId)}
+                            className="text-danger hover:text-danger/80 transition cursor-pointer"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

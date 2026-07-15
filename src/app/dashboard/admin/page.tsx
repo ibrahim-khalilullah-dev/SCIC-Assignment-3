@@ -36,10 +36,10 @@ export default function AdminDashboard() {
     async function fetchAdminData() {
       try {
         const [aRes, tRes] = await Promise.all([
-          fetch(`${SERVER_URL}/api/admin/analytics`, {
+          fetch(SERVER_URL + "/api/admin/analytics", {
             credentials: "include",
           }),
-          fetch(`${SERVER_URL}/api/admin/transactions`, {
+          fetch(SERVER_URL + "/api/admin/transactions", {
             credentials: "include",
           }),
         ]);
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
               className="bg-default-50 border-none p-5 rounded-2xl flex flex-row items-center gap-5 shadow-sm"
             >
               <div
-                className={`w-11 h-11 rounded-xl flex items-center justify-center border border-default-100 ${item.bg} ${item.color} shrink-0`}
+                className={`w-11 h-11 rounded-xl flex items-center justify-center ${item.bg} ${item.color} shrink-0 border-none`}
               >
                 <Icon className="w-5 h-5" />
               </div>
@@ -188,7 +188,7 @@ export default function AdminDashboard() {
             </p>
           </div>
 
-          <div className="w-full h-48 bg-default-100 rounded-2xl flex items-end justify-center px-4 relative overflow-hidden border">
+          <div className="w-full h-48 bg-default-100 rounded-2xl flex items-end justify-center px-4 relative overflow-hidden border-none">
             <svg
               viewBox="0 0 500 150"
               className="w-full h-full text-primary overflow-visible relative z-10"
@@ -294,15 +294,15 @@ export default function AdminDashboard() {
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-lg font-bold text-foreground pb-3 border-b">
+        <h2 className="text-lg font-bold text-foreground pb-3">
           Recent Platform Transactions
         </h2>
         {recentTx.length > 0 ? (
-          <div className="bg-default-50 border rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-default-50/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm border-none">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-xs text-muted-foreground font-semibold">
                 <thead>
-                  <tr className="border-b text-default-500 font-bold bg-default-100">
+                  <tr className="text-default-500 font-bold bg-default-100">
                     <th className="py-4 px-6">Transaction ID</th>
                     <th className="py-4 px-6">Ecosystem Type</th>
                     <th className="py-4 px-6">Buyer Email</th>
@@ -354,7 +354,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-10 bg-default-50 border border-dashed rounded-2xl">
+          <div className="text-center py-10 bg-default-50 border-none rounded-2xl shadow-sm">
             <p className="text-muted-foreground text-sm font-medium">
               No transactions recorded yet.
             </p>

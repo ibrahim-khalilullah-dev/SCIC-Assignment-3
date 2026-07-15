@@ -3,30 +3,19 @@ import Link from "next/link";
 
 export default function LoginPage() {
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <Link href="/" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              N
-            </div>
+    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 py-16 bg-background relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/2 -z-10 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
+
+      <div className="w-full max-w-md space-y-8 relative z-10">
+        <div className="flex justify-center">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-black text-2xl tracking-wider text-primary"
+          >
             NextMart
           </Link>
         </div>
-
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-sm">
-            <LoginForm />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-muted relative hidden lg:block">
-        <img
-          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200"
-          alt="Authentication"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.3]"
-        />
+        <LoginForm />
       </div>
     </div>
   );
