@@ -8,4 +8,8 @@ export type TProduct = {
   featured: boolean;
   image: string;
   description: string;
+  sellerId?: string;
+  sellerName?: string;
+  sellerEmail?: string;
+  status?: "Available" | "Sold" | "Unpublished";
 };
