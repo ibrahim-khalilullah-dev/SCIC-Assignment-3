@@ -2,7 +2,15 @@
 
 import { useState, FormEvent } from "react";
 import { Input, Button, Card, CardBody } from "@heroui/react";
-import { Eye, EyeOff, Mail, Lock, ShieldAlert, UserCheck } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  ShieldAlert,
+  UserCheck,
+  Briefcase,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -261,7 +269,7 @@ export function LoginForm() {
                 fill="#FBBC05"
               />
               <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.52 6.16-4.52z"
                 fill="#EA4335"
               />
             </svg>
@@ -320,6 +328,36 @@ export function LoginForm() {
               className="font-bold"
             >
               As Customer
+            </Button>
+            <Button
+              size="sm"
+              color="primary"
+              variant="flat"
+              radius="sm"
+              onClick={() =>
+                handleDemoLogin(
+                  "verified@nextmart.com",
+                  "seller123",
+                  "Verified Seller",
+                )
+              }
+              startContent={<Briefcase className="size-4" />}
+              className="font-bold col-span-1"
+            >
+              As Verified Seller
+            </Button>
+            <Button
+              size="sm"
+              color="danger"
+              variant="flat"
+              radius="sm"
+              onClick={() =>
+                handleDemoLogin("new@nextmart.com", "seller123", "New Seller")
+              }
+              startContent={<Briefcase className="size-4" />}
+              className="font-bold col-span-1"
+            >
+              As New Seller (Locked)
             </Button>
           </div>
         </CardBody>
