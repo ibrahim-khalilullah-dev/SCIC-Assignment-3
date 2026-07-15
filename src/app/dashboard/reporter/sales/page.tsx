@@ -25,7 +25,9 @@ export default function ReporterSalesPage() {
   useEffect(() => {
     async function fetchSales() {
       try {
-        const res = await fetch(`${SERVER_URL}/api/reporter/sales`, { credentials: "include" });
+        const res = await fetch(`${SERVER_URL}/api/reporter/sales`, {
+          credentials: "include",
+        });
         if (res.ok) {
           const data = await res.json();
           setSales(data);
@@ -71,7 +73,8 @@ export default function ReporterSalesPage() {
             Sales History
           </h2>
           <p className="text-sm text-muted-foreground mt-2">
-            Audit your historical incoming marketplace payments and product revenue statements.
+            Audit your historical incoming marketplace payments and product
+            revenue statements.
           </p>
         </div>
 
@@ -98,13 +101,22 @@ export default function ReporterSalesPage() {
                 <tr className="border-b text-default-500 font-bold bg-default-100">
                   <th className="py-5 px-6">Transaction ID</th>
                   <th className="py-5 px-6">Buyer Email</th>
-                  <th className="py-5 px-6 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-default-400" /> Transaction Date</th>
-                  <th className="py-5 px-6 text-right flex-row items-center gap-1.5"><CreditCard className="w-3.5 h-3.5 text-default-400 inline-block mr-1.5" /> Amount Received</th>
+                  <th className="py-5 px-6 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-default-400" />{" "}
+                    Transaction Date
+                  </th>
+                  <th className="py-5 px-6 text-right flex-row items-center gap-1.5">
+                    <CreditCard className="w-3.5 h-3.5 text-default-400 inline-block mr-1.5" />{" "}
+                    Amount Received
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-default-100">
                 {sales.map((log) => (
-                  <tr key={log._id} className="hover:bg-default-100 transition-colors">
+                  <tr
+                    key={log._id}
+                    className="hover:bg-default-100 transition-colors"
+                  >
                     <td className="py-4 px-6 font-mono text-default-400">
                       {log.transactionId}
                     </td>
