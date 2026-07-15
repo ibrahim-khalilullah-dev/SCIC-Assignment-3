@@ -32,11 +32,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full w-11/12 mx-auto flex flex-col bg-background text-foreground">
         <HeroUIProviderWrapper>
           <AuthProvider>
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
             <Toaster position="top-center" reverseOrder={false} />
           </AuthProvider>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DashboardSidebar from "../../components/dashboard/DashboardSidebar";
 import { Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
