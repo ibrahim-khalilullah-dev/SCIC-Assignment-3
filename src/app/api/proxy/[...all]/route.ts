@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const SERVER_URL = "https://scic-assignment-3-server-3-0.vercel.app";
+const SERVER_URL = process.env.BACKEND_INTERNAL_URL || "http://localhost:5000";
 
 export async function GET(
   request: NextRequest,

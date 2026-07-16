@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/server/:path*",
-        destination: "https://scic-assignment-3-server-3-0.vercel.app/:path*",
+        destination: `${process.env.BACKEND_INTERNAL_URL || "http://localhost:5000"}/:path*`,
       },
     ];
   },
