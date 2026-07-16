@@ -14,9 +14,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { TUser } from "@/types/user";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
+import { apiFetch } from "@/lib/api";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<TUser[]>([]);
@@ -36,9 +34,7 @@ export default function AdminUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch(SERVER_URL + "/api/admin/users", {
-        credentials: "include",
-      });
+      const res = await apiFetch("/api/admin/users");
       if (res.ok) {
         const data = await res.json();
         setUsers(data);
@@ -67,12 +63,10 @@ export default function AdminUsersPage() {
     if (!pendingChange) return;
     setUpdatingId(pendingChange.userId);
     try {
-      const res = await fetch(
-        SERVER_URL + "/api/admin/users/" + pendingChange.userId + "/role",
+      const res = await apiFetch(
+        "/api/admin/users/" + pendingChange.userId + "/role",
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({ role: pendingChange.newRole }),
         },
       );
@@ -103,13 +97,9 @@ export default function AdminUsersPage() {
     setUpdatingId(userId);
     const action = currentStatus === "banned" ? "unban" : "ban";
     try {
-      const res = await fetch(
-        SERVER_URL + "/api/admin/users/" + userId + "/" + action,
-        {
-          method: "PATCH",
-          credentials: "include",
-        },
-      );
+      const res = await apiFetch("/api/admin/users/" + userId + "/" + action, {
+        method: "PATCH",
+      });
 
       if (res.ok) {
         const nextStatus = currentStatus === "banned" ? "active" : "banned";
@@ -140,13 +130,9 @@ export default function AdminUsersPage() {
     if (!pendingDeleteId) return;
     setUpdatingId(pendingDeleteId);
     try {
-      const res = await fetch(
-        SERVER_URL + "/api/admin/users/" + pendingDeleteId,
-        {
-          method: "DELETE",
-          credentials: "include",
-        },
-      );
+      const res = await apiFetch("/api/admin/users/" + pendingDeleteId, {
+        method: "DELETE",
+      });
 
       if (res.ok) {
         setUsers(
@@ -359,7 +345,7 @@ export default function AdminUsersPage() {
           <Card className="w-full max-w-sm bg-default-50 border-none p-6 shadow-2xl space-y-6 rounded-2xl">
             <CardBody className="p-0 space-y-2 text-center flex flex-col items-center">
               <div className="p-3 bg-danger/10 text-danger rounded-full border border-danger/20 w-fit mb-2">
-                <AlertTriangle className="w-6 h-6 animate-bounce" />
+                <AlertTriangle className="w-6 h-6" />
               </div>
               <h3 className="text-base font-bold text-foreground">
                 Remove User Account

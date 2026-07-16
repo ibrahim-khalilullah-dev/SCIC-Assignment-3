@@ -18,9 +18,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
+import { apiFetch } from "@/lib/api";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -45,12 +43,8 @@ export default function AddProductPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/products`, {
+      const res = await apiFetch("/api/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({
           title,
           description,

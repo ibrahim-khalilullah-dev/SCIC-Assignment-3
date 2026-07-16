@@ -1,23 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function proxy(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
+export function proxy(request: NextRequest) {
+  const sessionToken =
+    request.cookies.get("better-auth.session_token")?.value ||
+    request.cookies.get("__Secure-better-auth.session_token")?.value;
 
-  const pathname = req.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
 
-  const protectedRoutes = ["/products/create", "/products/manage"];
-
-  const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route),
-  );
-
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (path.startsWith("/dashboard")) {
+    if (!sessionToken) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/products/:path*"],
+  matcher: ["/dashboard/:path*"],
 };

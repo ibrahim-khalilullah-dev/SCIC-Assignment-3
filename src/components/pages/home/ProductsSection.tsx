@@ -11,8 +11,7 @@ const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 const getValidImageUrl = (src: string) => {
-  if (!src)
-    return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  if (!src) return "/placeholder-product.png";
   if (
     src.startsWith("http://") ||
     src.startsWith("https://") ||
@@ -20,7 +19,7 @@ const getValidImageUrl = (src: string) => {
   ) {
     return src;
   }
-  return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  return "/placeholder-product.png";
 };
 
 export function FeaturedProductsSection() {

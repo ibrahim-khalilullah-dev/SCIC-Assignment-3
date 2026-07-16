@@ -5,9 +5,7 @@ import { Card, CardBody, Button, Spinner } from "@heroui/react";
 import { Trash2, Eye, EyeOff, X, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 import { TProduct } from "@/types/product";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
+import { apiFetch } from "@/lib/api";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<TProduct[]>([]);
@@ -20,9 +18,7 @@ export default function AdminProductsPage() {
 
   const fetchAdminProducts = async () => {
     try {
-      const res = await fetch(SERVER_URL + "/api/admin/products", {
-        credentials: "include",
-      });
+      const res = await apiFetch("/api/admin/products");
       if (res.ok) {
         const data = await res.json();
         setProducts(data);
@@ -44,12 +40,8 @@ export default function AdminProductsPage() {
       currentStatus === "Available" ? "Unpublished" : "Available";
 
     try {
-      const res = await fetch(SERVER_URL + "/api/products/" + id, {
+      const res = await apiFetch("/api/products/" + id, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({ status: newStatus }),
       });
 
@@ -83,9 +75,8 @@ export default function AdminProductsPage() {
     if (!pendingDeleteId) return;
     setUpdatingId(pendingDeleteId);
     try {
-      const res = await fetch(SERVER_URL + "/api/products/" + pendingDeleteId, {
+      const res = await apiFetch("/api/products/" + pendingDeleteId, {
         method: "DELETE",
-        credentials: "include",
       });
 
       if (res.ok) {
@@ -138,13 +129,13 @@ export default function AdminProductsPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-default-50/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-default-50/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm border-none">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs text-muted-foreground font-semibold">
               <thead>
                 <tr className="text-default-500 font-bold bg-default-100">
                   <th className="py-5 px-6">Product Details</th>
-                  <th className="py-5 px-6">Author / Seller</th>
+                  <th className="py-5 px-6">Seller Name</th>
                   <th className="py-5 px-6">Category</th>
                   <th className="py-5 px-6">Price</th>
                   <th className="py-5 px-6">Status</th>
@@ -241,7 +232,7 @@ export default function AdminProductsPage() {
           <Card className="w-full max-w-sm bg-default-50 border-none p-6 shadow-2xl space-y-6 rounded-2xl">
             <CardBody className="p-0 space-y-2 text-center flex flex-col items-center">
               <div className="p-3 bg-danger/10 text-danger rounded-full border border-danger/20 w-fit mb-2">
-                <AlertTriangle className="w-6 h-6 animate-bounce" />
+                <AlertTriangle className="w-6 h-6" />
               </div>
               <h3 className="text-base font-bold text-foreground">
                 Remove Product Listing

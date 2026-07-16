@@ -12,11 +12,9 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 import { TProduct } from "@/types/product";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function ReporterProductsPage() {
   const router = useRouter();
@@ -26,9 +24,7 @@ export default function ReporterProductsPage() {
 
   const fetchReporterProducts = async () => {
     try {
-      const res = await fetch(SERVER_URL + "/api/reporter/products", {
-        credentials: "include",
-      });
+      const res = await apiFetch("/api/reporter/products");
       if (res.ok) {
         const data = await res.json();
         setProducts(data);
@@ -50,12 +46,8 @@ export default function ReporterProductsPage() {
       currentStatus === "Available" ? "Unpublished" : "Available";
 
     try {
-      const res = await fetch(SERVER_URL + "/api/products/" + id, {
+      const res = await apiFetch("/api/products/" + id, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({ status: newStatus }),
       });
 
@@ -83,9 +75,8 @@ export default function ReporterProductsPage() {
 
     setLoadingId(id);
     try {
-      const res = await fetch(SERVER_URL + "/api/products/" + id, {
+      const res = await apiFetch("/api/products/" + id, {
         method: "DELETE",
-        credentials: "include",
       });
 
       if (res.ok) {

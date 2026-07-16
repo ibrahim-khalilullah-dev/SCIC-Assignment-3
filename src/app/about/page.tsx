@@ -16,7 +16,7 @@ export default function AboutPage() {
         </h1>
 
         <p className="mx-auto text-md text-default-500 leading-relaxed max-w-2xl">
-          ShopNest is a modern e-commerce platform dedicated to providing
+          NextMart is a modern e-commerce platform dedicated to providing
           quality products, secure shopping, and an exceptional customer
           experience. Whether you are looking for the latest technology,
           fashion, or everyday essentials, we have got you covered.

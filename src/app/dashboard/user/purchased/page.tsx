@@ -74,8 +74,8 @@ export default function PurchasedProductsPage() {
 
       {products.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((book) => {
-            const pId = book.id || (book as any)._id;
+          {products.map((product) => {
+            const pId = product.id || (product as any)._id;
             return (
               <Card
                 key={pId}
@@ -83,10 +83,10 @@ export default function PurchasedProductsPage() {
               >
                 <div className="space-y-4">
                   <div className="aspect-square rounded-xl overflow-hidden relative bg-default-100 flex items-center justify-center">
-                    {book.image ? (
+                    {product.image ? (
                       <img
-                        src={book.image}
-                        alt={book.title}
+                        src={product.image}
+                        alt={product.title}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -95,13 +95,13 @@ export default function PurchasedProductsPage() {
                   </div>
                   <div>
                     <span className="text-xs font-bold uppercase tracking-widest text-primary block">
-                      {book.category}
+                      {product.category}
                     </span>
                     <h3 className="font-bold text-foreground text-md truncate mt-1">
-                      {book.title}
+                      {product.title}
                     </h3>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Seller: {book.sellerName || "Verified Vendor"}
+                      Seller: {product.sellerName || "Verified Vendor"}
                     </p>
                   </div>
                 </div>

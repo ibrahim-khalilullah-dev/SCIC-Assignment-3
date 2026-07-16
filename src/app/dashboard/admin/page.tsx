@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, Spinner } from "@heroui/react";
 import { Users, ShoppingBag, Star, CreditCard, Calendar } from "lucide-react";
 import toast from "react-hot-toast";
+import { apiFetch } from "@/lib/api";
 
 interface TAnalytics {
   totalUsers: number;
@@ -24,9 +25,6 @@ interface TTransaction {
   createdAt: string;
 }
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-
 export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState<TAnalytics | null>(null);
   const [transactions, setTransactions] = useState<TTransaction[]>([]);
@@ -36,12 +34,8 @@ export default function AdminDashboard() {
     async function fetchAdminData() {
       try {
         const [aRes, tRes] = await Promise.all([
-          fetch(SERVER_URL + "/api/admin/analytics", {
-            credentials: "include",
-          }),
-          fetch(SERVER_URL + "/api/admin/transactions", {
-            credentials: "include",
-          }),
+          apiFetch("/api/admin/analytics"),
+          apiFetch("/api/admin/transactions"),
         ]);
 
         if (aRes.ok) setAnalytics(await aRes.json());
@@ -84,7 +78,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Verified Sellers",
-      value: `${analytics.totalWriters} Creators`,
+      value: `${analytics.totalWriters} Vendors`,
       icon: Star,
       color: "text-amber-500",
       bg: "bg-amber-500/10",

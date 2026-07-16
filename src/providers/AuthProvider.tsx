@@ -3,48 +3,43 @@
 import { TAuthContext } from "@/types/auth";
 import { TUser } from "@/types/user";
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 export const AuthContext = createContext<TAuthContext | undefined>(undefined);
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<TUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const { data: session, isPending } = authClient.useSession();
+
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch(`${SERVER_URL}/api/auth/me`, {
-          credentials: "include",
+    if (!isPending) {
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          name: session.user.name,
+          email: session.user.email,
+          role:
+            (session.user as any).userRole ||
+            (session.user as any).role ||
+            "user",
+          verifiedReporter: (session.user as any).verifiedWriter || false,
+          image: session.user.image || undefined,
         });
-
-        if (!res.ok) {
-          setUser(null);
-          return;
-        }
-
-        const data = await res.json();
-        setUser(data);
-      } catch {
+      } else {
         setUser(null);
-      } finally {
-        setLoading(false);
       }
-    })();
-  }, []);
+      setLoading(false);
+    }
+  }, [session, isPending]);
 
   async function logout() {
     try {
-      await fetch(`${SERVER_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      await authClient.signOut();
+      setUser(null);
     } catch (error) {
       console.error(error);
-    } finally {
-      setUser(null);
     }
   }
 

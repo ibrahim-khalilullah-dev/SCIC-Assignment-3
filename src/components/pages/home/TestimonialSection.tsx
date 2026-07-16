@@ -7,22 +7,22 @@ export function TestimonialSection() {
   const testimonials = [
     {
       name: "Marcus Miller",
-      role: "Lead Systems Architect",
-      text: "NextMart has completely streamlined my procurement process. The Stripe payment gateway worked seamlessly, and the premium hardware items arrived in pristine condition ahead of schedule.",
+      role: "Verified Buyer",
+      text: "I ordered a mechanical keyboard and a mouse from NextMart. The checkout was incredibly smooth, and the package arrived a day early. Very reliable and quick service.",
       rating: 5,
       avatar: "",
     },
     {
       name: "Sarah Lindqvist",
-      role: "E-Commerce Consultant",
-      text: "The selection of electronics and minimal workspace accessories is highly curated and premium. I purchased a mechanical keyboard and received excellent developer support for my order queries.",
+      role: "Tech Professional",
+      text: "Finding genuine, premium electronic items with fast shipping can be difficult, but NextMart has curated exactly what I needed. I am very happy with my purchase.",
       rating: 5,
       avatar: "",
     },
     {
       name: "Daniel Kovac",
-      role: "UI/UX Designer",
-      text: "As a designer, I am extremely particular about build quality. The catalog descriptions match the physical products perfectly, and the responsive user dashboard made tracking my order effortless.",
+      role: "Verified Buyer",
+      text: "Excellent build quality on the dual-monitor arm I ordered. The product specifications matched the actual item perfectly, and tracking my delivery on the dashboard was simple.",
       rating: 5,
       avatar: "",
     },

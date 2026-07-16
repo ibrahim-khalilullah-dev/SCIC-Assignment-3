@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, Spinner } from "@heroui/react";
 import { CreditCard, Calendar, DollarSign } from "lucide-react";
 import toast from "react-hot-toast";
+import { apiFetch } from "@/lib/api";
 
 interface TTransaction {
   _id: string;
@@ -14,9 +15,6 @@ interface TTransaction {
   createdAt: string;
 }
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-
 export default function AdminTransactionsPage() {
   const [transactions, setTransactions] = useState<TTransaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,9 +22,7 @@ export default function AdminTransactionsPage() {
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const res = await fetch(SERVER_URL + "/api/admin/transactions", {
-          credentials: "include",
-        });
+        const res = await apiFetch("/api/admin/transactions");
         if (res.ok) {
           const data = await res.json();
           setTransactions(data);

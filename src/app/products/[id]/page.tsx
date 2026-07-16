@@ -8,21 +8,17 @@ import {
   Star,
   ArrowLeft,
   Bookmark,
-  Check,
   PackageCheck,
   ShieldAlert,
 } from "lucide-react";
 import { Button, Spinner } from "@heroui/react";
 import { useAuth } from "@/hooks/useAuth";
 import { TProduct } from "@/types/product";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-
 const getValidImageUrl = (src: string) => {
-  if (!src)
-    return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  if (!src) return "/placeholder-product.png";
   if (
     src.startsWith("http://") ||
     src.startsWith("https://") ||
@@ -30,7 +26,7 @@ const getValidImageUrl = (src: string) => {
   ) {
     return src;
   }
-  return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500";
+  return "/placeholder-product.png";
 };
 
 export default function ProductDetails() {
@@ -48,15 +44,13 @@ export default function ProductDetails() {
 
     async function loadProductAndWishlist() {
       try {
-        const pRes = await fetch(`${SERVER_URL}/api/products/${id}`);
+        const pRes = await apiFetch("/api/products/" + id);
         if (!pRes.ok) throw new Error("Not found");
         const pData = await pRes.json();
         setProduct(pData);
 
         if (user) {
-          const bRes = await fetch(`${SERVER_URL}/api/bookmarks`, {
-            credentials: "include",
-          });
+          const bRes = await apiFetch("/api/bookmarks");
           if (bRes.ok) {
             const bData = await bRes.json();
             const alreadySaved = bData.some((b: any) => b.productId === id);
@@ -83,21 +77,16 @@ export default function ProductDetails() {
     setActionLoading(true);
     try {
       if (isBookmarked) {
-        const res = await fetch(`${SERVER_URL}/api/bookmarks/${product.id}`, {
+        const res = await apiFetch("/api/bookmarks/" + product.id, {
           method: "DELETE",
-          credentials: "include",
         });
         if (res.ok) {
           setIsBookmarked(false);
           toast.success("Removed from wishlist.");
         }
       } else {
-        const res = await fetch(`${SERVER_URL}/api/bookmarks`, {
+        const res = await apiFetch("/api/bookmarks", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
           body: JSON.stringify({ productId: product.id }),
         });
         if (res.ok) {
@@ -124,12 +113,8 @@ export default function ProductDetails() {
 
     setActionLoading(true);
     try {
-      const res = await fetch(`${SERVER_URL}/api/create-checkout-session`, {
+      const res = await apiFetch("/api/create-checkout-session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({ type: "purchase", productId: product.id }),
       });
 

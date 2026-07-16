@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardBody, Button, Spinner } from "@heroui/react";
-import { CheckCircle2, ShoppingBag, ArrowLeft } from "lucide-react";
+import { CheckCircle2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
@@ -72,7 +72,7 @@ function SuccessPageContent() {
             </h1>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Thank you for your purchase. The transaction has processed, and
-              your products are unlocked inside your personal dashboard shelf.
+              your products are unlocked inside your personal dashboard.
             </p>
           </div>
 
@@ -83,7 +83,7 @@ function SuccessPageContent() {
                 radius="sm"
                 className="w-full h-12 font-bold shadow-lg shadow-primary/20"
               >
-                Go to Reader Bookshelf
+                Go to User Dashboard
               </Button>
             </Link>
 

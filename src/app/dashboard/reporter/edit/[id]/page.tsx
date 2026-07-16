@@ -12,11 +12,9 @@ import {
   Spinner,
 } from "@heroui/react";
 import { ArrowLeft, Save, DollarSign, Package, Upload } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 import { TProduct } from "@/types/product";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -39,7 +37,7 @@ export default function EditProductPage() {
     if (!id) return;
     async function fetchProduct() {
       try {
-        const res = await fetch(`${SERVER_URL}/api/products/${id}`);
+        const res = await apiFetch("/api/products/" + id);
         if (res.ok) {
           const p: TProduct = await res.json();
           setTitle(p.title);
@@ -76,7 +74,7 @@ export default function EditProductPage() {
 
     try {
       const apiKey = process.env.NEXT_PUBLIC_IMAGE_UPLOAD_API;
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      const res = await fetch("https://api.imgbb.com/1/upload?key=" + apiKey, {
         method: "POST",
         body: formData,
       });
@@ -106,12 +104,8 @@ export default function EditProductPage() {
     setIsSaving(true);
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/products/${id}`, {
+      const res = await apiFetch("/api/products/" + id, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({
           title,
           description,
@@ -191,7 +185,7 @@ export default function EditProductPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-default-50 border-2 rounded-lg h-10 px-3 text-sm focus:border-primary outline-none transition cursor-pointer"
+                    className="w-full bg-default-50 border-2 border-default-200 rounded-lg h-10 px-3 text-sm focus:border-primary outline-none transition cursor-pointer text-default-700"
                   >
                     {[
                       "Electronics",

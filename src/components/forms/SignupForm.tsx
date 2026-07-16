@@ -6,11 +6,8 @@ import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useAuth } from "@/hooks/useAuth";
+import { authClient } from "@/lib/auth-client";
 import { motion } from "framer-motion";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export function SignupForm() {
   const [username, setUsername] = useState("");
@@ -20,7 +17,6 @@ export function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
-  const { setUser } = useAuth();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -35,33 +31,23 @@ export function SignupForm() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(SERVER_URL + "/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ username, email, password }),
+      const { error } = await authClient.signUp.email({
+        email,
+        password,
+        name: username,
+        userRole: "user",
+        verifiedWriter: false,
+        callbackURL: "/",
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message || "Registration failed.");
+      if (error) {
+        toast.error(error.message || "Registration failed.");
         return;
       }
 
       toast.success("Account registered successfully!");
-      setUser({
-        id: data.user.id,
-        name: data.user.username,
-        email: data.user.email,
-        role: data.user.role,
-        verifiedReporter: false,
-      });
       router.push("/");
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -70,17 +56,18 @@ export function SignupForm() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
+      className="w-full max-w-md mx-auto"
     >
-      <Card className="w-full max-w-md border-none bg-background/50 backdrop-blur-md py-6 px-4 rounded-3xl shadow-xl">
-        <CardBody className="space-y-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+      <Card className="w-full border border-default-100 bg-background/80 backdrop-blur-md p-6 rounded-2xl shadow-lg">
+        <CardBody className="p-0 space-y-6">
+          <div className="text-center space-y-1">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Create an Account
             </h1>
-            <p className="text-sm text-default-400">
+            <p className="text-xs text-default-500">
               Sign up below to start shopping at NextMart
             </p>
           </div>
@@ -98,10 +85,10 @@ export function SignupForm() {
               radius="sm"
               classNames={{
                 inputWrapper:
-                  "border-default-200 focus-within:border-primary h-11 bg-background",
+                  "border-default-200 focus-within:border-primary h-10 bg-background",
               }}
               startContent={
-                <User className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
+                <User className="size-4 text-default-400 flex-shrink-0" />
               }
             />
 
@@ -117,10 +104,10 @@ export function SignupForm() {
               radius="sm"
               classNames={{
                 inputWrapper:
-                  "border-default-200 focus-within:border-primary h-11 bg-background",
+                  "border-default-200 focus-within:border-primary h-10 bg-background",
               }}
               startContent={
-                <Mail className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
+                <Mail className="size-4 text-default-400 flex-shrink-0" />
               }
             />
 
@@ -136,10 +123,10 @@ export function SignupForm() {
               radius="sm"
               classNames={{
                 inputWrapper:
-                  "border-default-200 focus-within:border-primary h-11 bg-background",
+                  "border-default-200 focus-within:border-primary h-10 bg-background",
               }}
               startContent={
-                <Lock className="size-4 text-default-400 pointer-events-none flex-shrink-0" />
+                <Lock className="size-4 text-default-400 flex-shrink-0" />
               }
               endContent={
                 <button
@@ -162,17 +149,17 @@ export function SignupForm() {
               variant="solid"
               radius="sm"
               isLoading={isLoading}
-              className="w-full font-bold text-md shadow-lg shadow-primary/20 hover:scale-[1.01] transition-transform duration-200"
+              className="w-full font-semibold h-11 text-sm mt-2 shadow-md shadow-primary/25 hover:opacity-95 transition-opacity"
             >
               Sign Up
             </Button>
           </form>
 
-          <div className="text-center text-sm text-default-400">
+          <div className="text-center text-xs text-default-500">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-semibold text-primary hover:underline"
+              className="font-medium text-primary hover:underline ml-1"
             >
               Log In
             </Link>
