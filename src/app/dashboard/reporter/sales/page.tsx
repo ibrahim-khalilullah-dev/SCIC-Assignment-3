@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Button, Spinner } from "@heroui/react";
 import { CreditCard, ArrowLeft, DollarSign, Calendar } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 
 interface TSale {
@@ -14,9 +15,6 @@ interface TSale {
   createdAt: string;
 }
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-
 export default function ReporterSalesPage() {
   const router = useRouter();
   const [sales, setSales] = useState<TSale[]>([]);
@@ -25,9 +23,7 @@ export default function ReporterSalesPage() {
   useEffect(() => {
     async function fetchSales() {
       try {
-        const res = await fetch(SERVER_URL + "/api/reporter/sales", {
-          credentials: "include",
-        });
+        const res = await apiFetch("/api/reporter/sales");
         if (res.ok) {
           const data = await res.json();
           setSales(data);

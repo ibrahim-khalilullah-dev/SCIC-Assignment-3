@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, Button, Spinner } from "@heroui/react";
 import { Bookmark, ShoppingCart, Trash2 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 
 interface TBookmark {
@@ -15,9 +16,6 @@ interface TBookmark {
   productSeller: string;
 }
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-
 export default function UserBookmarksPage() {
   const [bookmarks, setBookmarks] = useState<TBookmark[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +23,7 @@ export default function UserBookmarksPage() {
 
   const fetchBookmarks = async () => {
     try {
-      const res = await fetch(SERVER_URL + "/api/bookmarks", {
-        credentials: "include",
-      });
+      const res = await apiFetch("/api/bookmarks");
       if (res.ok) {
         const data = await res.json();
         setBookmarks(data);
@@ -45,9 +41,8 @@ export default function UserBookmarksPage() {
 
   const handleRemove = async (productId: string) => {
     try {
-      const res = await fetch(SERVER_URL + "/api/bookmarks/" + productId, {
+      const res = await apiFetch("/api/bookmarks/" + productId, {
         method: "DELETE",
-        credentials: "include",
       });
 
       if (res.ok) {
@@ -64,12 +59,8 @@ export default function UserBookmarksPage() {
   const handleBuyNow = async (productId: string) => {
     setLoadingId(productId);
     try {
-      const res = await fetch(SERVER_URL + "/api/create-checkout-session", {
+      const res = await apiFetch("/api/create-checkout-session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({ type: "purchase", productId }),
       });
 

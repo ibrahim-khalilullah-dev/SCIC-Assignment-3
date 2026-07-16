@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardBody, Button, Spinner } from "@heroui/react";
+import { Card, Button, Spinner } from "@heroui/react";
 import { ShoppingBag, Bookmark, CreditCard } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import Link from "next/link";
 import { TProduct } from "@/types/product";
 
@@ -14,9 +15,6 @@ interface TTransaction {
   createdAt: string;
   amount: number;
 }
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function UserDashboard() {
   const { user } = useAuth();
@@ -29,11 +27,9 @@ export default function UserDashboard() {
     async function fetchDashboardData() {
       try {
         const [pRes, bRes, txRes] = await Promise.all([
-          fetch(SERVER_URL + "/api/user/purchased-products", {
-            credentials: "include",
-          }),
-          fetch(SERVER_URL + "/api/bookmarks", { credentials: "include" }),
-          fetch(SERVER_URL + "/api/user/purchases", { credentials: "include" }),
+          apiFetch("/api/user/purchased-products"),
+          apiFetch("/api/bookmarks"),
+          apiFetch("/api/user/purchases"),
         ]);
 
         if (pRes.ok) setPurchasedProducts(await pRes.json());

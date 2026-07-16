@@ -5,11 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, Button, Spinner } from "@heroui/react";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 import { TProduct } from "@/types/product";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function PurchasedProductsPage() {
   const router = useRouter();
@@ -19,9 +17,7 @@ export default function PurchasedProductsPage() {
   useEffect(() => {
     async function fetchPurchased() {
       try {
-        const res = await fetch(SERVER_URL + "/api/user/purchased-products", {
-          credentials: "include",
-        });
+        const res = await apiFetch("/api/user/purchased-products");
         if (res.ok) {
           const data = await res.json();
           setProducts(data);

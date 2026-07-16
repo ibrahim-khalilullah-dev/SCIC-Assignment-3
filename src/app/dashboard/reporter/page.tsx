@@ -11,6 +11,7 @@ import {
   PlusCircle,
   ArrowUpRight,
 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
@@ -19,9 +20,6 @@ interface TSale {
   transactionId: string;
   amount: number;
 }
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function ReporterDashboard() {
   const { user } = useAuth();
@@ -35,12 +33,8 @@ export default function ReporterDashboard() {
       async function fetchReporterData() {
         try {
           const [pRes, sRes] = await Promise.all([
-            fetch(SERVER_URL + "/api/reporter/products", {
-              credentials: "include",
-            }),
-            fetch(SERVER_URL + "/api/reporter/sales", {
-              credentials: "include",
-            }),
+            apiFetch("/api/reporter/products"),
+            apiFetch("/api/reporter/sales"),
           ]);
 
           if (pRes.ok) {
@@ -66,12 +60,8 @@ export default function ReporterDashboard() {
   const handleVerifyNow = async () => {
     setIsVerifying(true);
     try {
-      const res = await fetch(SERVER_URL + "/api/create-checkout-session", {
+      const res = await apiFetch("/api/create-checkout-session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({
           type: "publishing fee",
           price: "20.00",

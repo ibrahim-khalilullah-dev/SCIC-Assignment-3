@@ -21,8 +21,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           name: session.user.name,
           email: session.user.email,
           role:
-            (session.user as any).userRole ||
             (session.user as any).role ||
+            (session.user as any).userRole ||
             "user",
           verifiedReporter: (session.user as any).verifiedWriter || false,
           image: session.user.image || undefined,

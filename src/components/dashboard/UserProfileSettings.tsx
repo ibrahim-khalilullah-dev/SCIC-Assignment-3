@@ -4,10 +4,8 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Card, Button, Input } from "@heroui/react";
 import { Settings, User, Edit3, Upload, Mail, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
-
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export default function UserProfileSettings() {
   const { user, setUser } = useAuth();
@@ -64,12 +62,8 @@ export default function UserProfileSettings() {
     setIsSaving(true);
 
     try {
-      const res = await fetch(SERVER_URL + "/api/users/profile", {
+      const res = await apiFetch("/api/users/profile", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({ name, image: imageUrl }),
       });
 
